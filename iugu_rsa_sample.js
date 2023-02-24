@@ -80,9 +80,15 @@ class IUGU_RSA_SAMPLE {
     return this.last_response;
   }
 
-  async send_data(method, endpoint, data) {
+  last_response_code = 0;
+  getLastResponseCode() {
+    return this.last_response_code;
+  }
+
+  async send_data(method, endpoint, data, response_code_ok) {
     // Link de referência: https://dev.iugu.com/reference/autentica%C3%A7%C3%A3o#d%C3%A9cimo-primeiro-passo
     this.last_response = "";
+    this.last_response_code = 0;
     const request_time = this.get_request_time();
     const body = JSON.stringify(data);
     const signature = this.sign_body(
@@ -132,9 +138,9 @@ class IUGU_RSA_SAMPLE {
       });
     };
 
-    const statusCode = await doRequest();
+    this.last_response_code = await doRequest();
     this.last_response = responseBody;
-    ret = statusCode == 200;
+    ret = this.last_response_code == response_code_ok;
     return ret;
   }
 
@@ -142,13 +148,13 @@ class IUGU_RSA_SAMPLE {
     // Link de referência: https://dev.iugu.com/reference/validate-signature
     const method = "POST";
     const endpoint = "/v1/signature/validate";
-    return await this.send_data(method, endpoint, data);
+    return await this.send_data(method, endpoint, data, 200);
   }
 
   async transfer_requests(data) {
     const method = "POST";
     const endpoint = "/v1/transfer_requests";
-    return await this.send_data(method, endpoint, data);
+    return await this.send_data(method, endpoint, data, 202);
   }
 }
 // #####################################################################################################
@@ -171,9 +177,9 @@ class IUGU_RSA_SAMPLE {
   };
 
   if (await iuru_rsa.signature_validate(json)) {
-    console.log("Response: " + iuru_rsa.getLastResponse());
+    console.log("Response: " + iuru_rsa.getLastResponseCode() + iuru_rsa.getLastResponse());
   } else {
-    console.log("Error: " + iuru_rsa.getLastResponse());
+    console.log("Error: " + iuru_rsa.getLastResponseCode() + iuru_rsa.getLastResponse());
   }
   // #####################################################################################################
 
@@ -191,10 +197,10 @@ class IUGU_RSA_SAMPLE {
     },
   };
 
-  if (await iuru_rsa.transfer_requests(json2)) {
-    console.log("Response: " + iuru_rsa.getLastResponse());
+  if (await iuru_rsa.transfer_requests(json)) {
+    console.log("Response: " + iuru_rsa.getLastResponseCode() + iuru_rsa.getLastResponse());
   } else {
-    console.log("Error: " + iuru_rsa.getLastResponse());
+    console.log("Error: " + iuru_rsa.getLastResponseCode() + iuru_rsa.getLastResponse());
   }
   // #####################################################################################################
 })();
