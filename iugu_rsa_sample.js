@@ -9,6 +9,13 @@
 // #####################################################################################################
 // #####################################################################################################
 // #####################################################################################################
+// #####################################################################################################
+// #####################################################################################################
+// #####################################################################################################
+// ####################                       ATENÇÃO                 ##################################
+// Para efetuar a Assinatura de Requisições e Pix/TED-Out à partir de uma Subconta, sem uma Chave Criptografada, siga a documentação abaixo: 
+// https://dev.iugu.com/reference/rsawhitelabel
+
 
 var https = require("https");
 const crypto = require("crypto");
@@ -185,6 +192,7 @@ class IUGU_RSA_SAMPLE {
 
   // #####################################################################################################
   //                                           transfer_requests
+  // Link de referência: https://dev.iugu.com/reference/transfer%C3%AAncia-para-terceiros-1 - Consulte esta FAQ caso tenha dúvidas na composição da requisição
   const json2 = {
     api_token: iuru_rsa.api_token,
     transfer_type: "pix",
